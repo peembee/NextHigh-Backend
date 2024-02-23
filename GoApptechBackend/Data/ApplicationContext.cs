@@ -10,9 +10,7 @@ namespace GoApptechBackend.Data
         {
         }
         public DbSet<Person> Persons { get; set; }
-        public DbSet<EmployeePoints> EmployeePoints { get; set; }
         public DbSet<EmployeeRank> EmployeeRanks { get; set; }
-        public DbSet<PingPongPoints> PingPongPoints { get; set; }
         public DbSet<PingPongRank> PingPongRanks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

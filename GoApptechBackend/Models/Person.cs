@@ -16,6 +16,14 @@ namespace GoApptechBackend.Models
         public string Username { get; set; } = string.Empty;
 
         [Required]
+        [StringLength(100)]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(50)]
+        public string Password { get; set; } = string.Empty;
+
+        [Required]
         [StringLength(30)]
         public string FirstName { get; set; } = string.Empty;
 
@@ -32,25 +40,17 @@ namespace GoApptechBackend.Models
         [Required]
         public int EmpPoints { get; set; } = 0;
 
-        [ForeignKey("EmployeePoints")]
-        public int FK_EmployeePointsID { get; set; }
-        public virtual EmployeePoints? EmployeePoints { get; set; }
 
 
         [Required]
         public int PongPoints { get; set; } = 0;
-
-        [ForeignKey("PingPongPoints")]
-        public int FK_PingPongPointsID { get; set; }
-        public virtual PingPongPoints? PingPongPoints { get; set; }
-
 
         public int LossesInPingPong { get; set; } = 0;
 
         public int WinningsInPingPong { get; set; } = 0;
 
         [StringLength(250)]
-        public string ImageURL { get; set; } = string.Empty;
+        public string? ImageURL { get; set; } = string.Empty;
 
         [Required]
         public DateTime CreatedDate { get; set; } = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);

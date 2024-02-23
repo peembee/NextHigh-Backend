@@ -21,6 +21,12 @@ namespace GoApptechBackend
 
             builder.Services.AddScoped<IRepository<Person>, Repository<Person>>();
 
+            // cors policies
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(opt => opt.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
@@ -40,6 +46,7 @@ namespace GoApptechBackend
 
             app.UseAuthorization();
 
+            app.UseCors();
 
             app.MapControllers();
 

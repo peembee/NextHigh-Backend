@@ -100,6 +100,7 @@ namespace GoApptechBackend.Controllers
                 createDto.FirstName = char.ToUpper(createDto.FirstName[0]) + createDto.FirstName.Substring(1).ToLower();
                 createDto.LastName = char.ToUpper(createDto.LastName[0]) + createDto.LastName.Substring(1).ToLower();
 
+
                 Person person = mapper.Map<Person>(createDto);
                 await context.CreateAsync(person);
                 apiResponse.Result = mapper.Map<CreatePersonDTO>(person);
@@ -127,12 +128,64 @@ namespace GoApptechBackend.Controllers
                 {
                     return BadRequest();
                 }
-                updateDto.FirstName = char.ToUpper(updateDto.FirstName[0]) + updateDto.FirstName.Substring(1).ToLower();
-                updateDto.LastName = char.ToUpper(updateDto.LastName[0]) + updateDto.LastName.Substring(1).ToLower();
 
-                Person model = mapper.Map<Person>(updateDto);
+                // Hämta befintlig Person från databasen
+                Person existingPerson = await context.GetAsync(p => p.PersonID == id);
 
-                await context.UpdateAsync(model);
+                if (existingPerson == null)
+                {
+                    return BadRequest();
+                }
+
+                if (!string.IsNullOrWhiteSpace(updateDto.FirstName) && existingPerson.FirstName != updateDto.FirstName)
+                {
+                    existingPerson.FirstName = char.ToUpper(updateDto.FirstName[0]) + updateDto.FirstName.Substring(1).ToLower();
+                }
+
+                if (!string.IsNullOrWhiteSpace(updateDto.LastName) && existingPerson.LastName != updateDto.LastName)
+                {
+                    existingPerson.LastName = char.ToUpper(updateDto.LastName[0]) + updateDto.LastName.Substring(1).ToLower();
+                }
+
+
+                if (updateDto.Email != existingPerson.Email && existingPerson.Email != updateDto.Email)
+                {
+                    existingPerson.Email = updateDto.Email;
+                }
+
+                if (!string.IsNullOrWhiteSpace(updateDto.ImageURL) && existingPerson.ImageURL != updateDto.ImageURL)
+                {
+                    existingPerson.ImageURL = char.ToUpper(updateDto.ImageURL[0]) + updateDto.ImageURL.Substring(1).ToLower();
+                }
+
+                if (updateDto.YearsInPratice != existingPerson.YearsInPratice && updateDto.YearsInPratice > 0)
+                {
+                    existingPerson.YearsInPratice = updateDto.YearsInPratice;
+                }
+
+                if (updateDto.EmpPoints != existingPerson.EmpPoints && updateDto.EmpPoints > 0)
+                {
+                    existingPerson.EmpPoints = updateDto.EmpPoints;
+                }
+
+                if (updateDto.PongPoints != existingPerson.PongPoints && updateDto.PongPoints > 0)
+                {
+                    existingPerson.PongPoints = updateDto.PongPoints;
+                }
+
+                if (updateDto.LossesInPingPong != existingPerson.LossesInPingPong && updateDto.LossesInPingPong > 0)
+                {
+                    existingPerson.LossesInPingPong = updateDto.LossesInPingPong;
+                }
+
+                if (updateDto.WinningsInPingPong != existingPerson.WinningsInPingPong && updateDto.WinningsInPingPong > 0)
+                {
+                    existingPerson.WinningsInPingPong = updateDto.WinningsInPingPong;
+                }
+
+
+                await context.UpdateAsync(existingPerson);
+
                 apiResponse.Result = mapper.Map<UpdatePersonDTO>(updateDto);
                 apiResponse.StatusCode = HttpStatusCode.NoContent;
                 apiResponse.IsSuccess = true;
@@ -141,8 +194,7 @@ namespace GoApptechBackend.Controllers
             catch (Exception ex)
             {
                 apiResponse.IsSuccess = false;
-                apiResponse.Errors
-                    = new List<string>() { ex.ToString() };
+                apiResponse.Errors = new List<string>() { ex.ToString() };
             }
             return apiResponse;
         }

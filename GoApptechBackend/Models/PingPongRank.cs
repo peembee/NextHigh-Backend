@@ -10,8 +10,10 @@ namespace GoApptechBackend.Models
         public int PingPongRankID { get; set; }
 
         [Required]
+        public int RequiredPoints { get; set; }
+
+        [Required]
         [StringLength(50)]
         public string PingPongRankName { get; set; } = string.Empty;
-        public virtual ICollection<PingPongPoints>? PingPongPoints { get; set; }
     }
 }
