@@ -1,7 +1,15 @@
-﻿namespace GoApptechBackend.Models.DTO.PersonDTO
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace GoApptechBackend.Models.DTO.PersonDTO
 {
     public class GetPersonDTO
     {
+        public int PersonId { get; set; }
+
+        public int FK_PingPongRankID { get; set; }
+
+        public int FK_EmployeeRankID { get; set; }
         public string Username { get; set; } = string.Empty;
 
         public string Email { get; set; } = string.Empty;
@@ -12,12 +20,7 @@
 
         public int EmpPoints { get; set; }
 
-        public int PongPoints { get; set; }
-
         public double YearsInPratice { get; set; }
 
-        public int LossesInPingPong { get; set; }
-
-        public int WinningsInPingPong { get; set; }
     }
 }
