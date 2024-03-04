@@ -12,6 +12,8 @@ namespace GoApptechBackend.MappingConfig
 
             CreateMap<Person, CreatePersonDTO>().ReverseMap();
             CreateMap<Person, UpdatePersonDTO>().ReverseMap();
+
+            CreateMap<Person, LoginPersonDTO>().ReverseMap();
         }
     }
 }

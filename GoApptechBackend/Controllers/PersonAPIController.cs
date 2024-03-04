@@ -20,7 +20,7 @@ namespace GoApptechBackend.Controllers
         {
             this.context = context;
             this.mapper = mapper;
-            this.apiResponse = new();
+            this.apiResponse = new ApiResponse();
         }
 
 
@@ -98,8 +98,10 @@ namespace GoApptechBackend.Controllers
 
                 if (existingPerson != null)
                 {
-                    ModelState.AddModelError("Custom error", "This user already exists");
-                    return BadRequest(ModelState);
+                    apiResponse.StatusCode = HttpStatusCode.BadRequest;
+                    apiResponse.IsSuccess = false;
+                    apiResponse.Errors.Add("This user already exists");
+                    return BadRequest(apiResponse);
                 }
 
                 createDto.FirstName = createDto.FirstName.Trim();

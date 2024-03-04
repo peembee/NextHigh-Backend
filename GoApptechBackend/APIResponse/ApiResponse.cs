@@ -11,5 +11,7 @@ namespace GoApptechBackend.APIResponse
         public List<string> Errors { get; set; } = new List<string>();
 
         public object Result { get; set; } = new object();
+
+        public int ApiResponseWithID { get; set; }
     }
 }
