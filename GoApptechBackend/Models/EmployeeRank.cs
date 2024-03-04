@@ -10,10 +10,11 @@ namespace GoApptechBackend.Models
         public int EmployeeRankID { get; set; }
 
         [Required]
-        public int RequiredPoints { get; set; }
+        [StringLength(50)]
+        public string RankTitle { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(50)]
-        public string EmployeeRankRankName { get; set; } = string.Empty;
+        public int RequiredPoints { get; set; }
+
     }
 }

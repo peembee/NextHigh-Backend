@@ -8,7 +8,6 @@ using System.Net;
 
 namespace GoApptechBackend.Controllers
 {
-    // test azure devops
     [Route("api/Person")]
     [ApiController]
     public class PersonAPIController : ControllerBase
@@ -167,21 +166,6 @@ namespace GoApptechBackend.Controllers
                 if (updateDto.EmpPoints != existingPerson.EmpPoints && updateDto.EmpPoints > 0)
                 {
                     existingPerson.EmpPoints = updateDto.EmpPoints;
-                }
-
-                if (updateDto.PongPoints != existingPerson.PongPoints && updateDto.PongPoints > 0)
-                {
-                    existingPerson.PongPoints = updateDto.PongPoints;
-                }
-
-                if (updateDto.LossesInPingPong != existingPerson.LossesInPingPong && updateDto.LossesInPingPong > 0)
-                {
-                    existingPerson.LossesInPingPong = updateDto.LossesInPingPong;
-                }
-
-                if (updateDto.WinningsInPingPong != existingPerson.WinningsInPingPong && updateDto.WinningsInPingPong > 0)
-                {
-                    existingPerson.WinningsInPingPong = updateDto.WinningsInPingPong;
                 }
 
 

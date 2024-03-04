@@ -12,6 +12,17 @@ namespace GoApptechBackend.Models
         public int PersonID { get; set; }
 
         [Required]
+        [ForeignKey("PingPongRanks")]
+        public int FK_PingPongRankID { get; set; }
+        public virtual PingPongRank? PingPongRanks { get; set; }
+
+        [Required]
+        [ForeignKey("EmployeeRanks")]
+        public int FK_EmployeeRankID { get; set; }
+        public virtual EmployeeRank? EmployeeRanks { get; set; }
+
+
+        [Required]
         [StringLength(30)]
         public string Username { get; set; } = string.Empty;
 
@@ -40,14 +51,6 @@ namespace GoApptechBackend.Models
         [Required]
         public int EmpPoints { get; set; } = 0;
 
-
-
-        [Required]
-        public int PongPoints { get; set; } = 0;
-
-        public int LossesInPingPong { get; set; } = 0;
-
-        public int WinningsInPingPong { get; set; } = 0;
 
         [StringLength(250)]
         public string? ImageURL { get; set; } = string.Empty;

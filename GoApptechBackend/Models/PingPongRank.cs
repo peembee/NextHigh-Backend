@@ -9,11 +9,13 @@ namespace GoApptechBackend.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int PingPongRankID { get; set; }
 
-        [Required]
-        public int RequiredPoints { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string PingPongRankName { get; set; } = string.Empty;
+        public string RankTitle { get; set; } = string.Empty;
+
+        [Required]
+        public int RequiredWinnings { get; set; }
+
     }
 }
