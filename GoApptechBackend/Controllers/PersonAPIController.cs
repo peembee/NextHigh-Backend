@@ -88,20 +88,35 @@ namespace GoApptechBackend.Controllers
         {
             try
             {
-                if (await context.GetAsync(ap => ap.Username.ToLower() == createDto.Username.ToLower()) != null)
-                {
-                    ModelState.AddModelError("Custom error", "This user alredy exist");
-                    return BadRequest(ModelState);
-                }
                 if (createDto == null)
                 {
                     return BadRequest(createDto);
                 }
+
+                // Kontrollera om det redan finns en person med samma användarnamn eller e-postadress
+                var existingPerson = await context.GetAsync(ap => ap.Username.ToLower() == createDto.Username.ToLower().Trim() || ap.Email.ToLower()== createDto.Email.ToLower().Trim());
+
+                if (existingPerson != null)
+                {
+                    ModelState.AddModelError("Custom error", "This user already exists");
+                    return BadRequest(ModelState);
+                }
+
+                createDto.FirstName = createDto.FirstName.Trim();
                 createDto.FirstName = char.ToUpper(createDto.FirstName[0]) + createDto.FirstName.Substring(1).ToLower();
+
+                createDto.LastName = createDto.LastName.Trim();
                 createDto.LastName = char.ToUpper(createDto.LastName[0]) + createDto.LastName.Substring(1).ToLower();
+
+                createDto.Username = createDto.Username.Trim();
+
+                createDto.Email = createDto.Email.Trim();
 
 
                 Person person = mapper.Map<Person>(createDto);
+
+                person.FK_EmployeeRankID = 1;
+                person.FK_PingPongRankID = 1;
                 await context.CreateAsync(person);
                 apiResponse.Result = mapper.Map<CreatePersonDTO>(person);
                 apiResponse.StatusCode = System.Net.HttpStatusCode.Created;
