@@ -35,7 +35,7 @@ namespace GoApptechBackend.Controllers
                     return BadRequest("Invalid login request");
                 }
 
-                var findUser = await context.GetAsync(ap => ap.Username.ToLower() == loginRequest.Username.ToLower().Trim());
+                var findUser = await context.GetAsync(employee => employee.Username.ToLower() == loginRequest.Username.ToLower().Trim() && employee.Password == loginRequest.Password);
 
                 if (findUser == null)
                 {
@@ -46,7 +46,7 @@ namespace GoApptechBackend.Controllers
                 {
                     StatusCode = HttpStatusCode.OK,
                     IsSuccess = true,
-                    ApiResponseWithID = findUser.PersonID
+                    Result = findUser
                 };
                 return Ok(response);
             }

@@ -119,6 +119,8 @@ namespace GoApptechBackend.Controllers
 
                 person.FK_EmployeeRankID = 1;
                 person.FK_PingPongRankID = 1;
+                person.isAdmin = false;
+
                 await context.CreateAsync(person);
                 apiResponse.Result = mapper.Map<CreatePersonDTO>(person);
                 apiResponse.StatusCode = System.Net.HttpStatusCode.Created;

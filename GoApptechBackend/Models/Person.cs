@@ -35,6 +35,9 @@ namespace GoApptechBackend.Models
         public string Password { get; set; } = string.Empty;
 
         [Required]
+        public bool isAdmin {  get; set; }
+
+        [Required]
         [StringLength(30)]
         public string FirstName { get; set; } = string.Empty;
 
