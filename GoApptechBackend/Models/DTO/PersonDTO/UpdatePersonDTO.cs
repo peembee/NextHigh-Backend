@@ -6,8 +6,6 @@ namespace GoApptechBackend.Models.DTO.PersonDTO
     {
         public int PersonId { get; set; }
 
-        [StringLength(50)]
-        public string Password { get; set; } = string.Empty;
 
         [StringLength(30)]
         public string FirstName { get; set; } = string.Empty;
@@ -16,14 +14,6 @@ namespace GoApptechBackend.Models.DTO.PersonDTO
         public string LastName { get; set; } = string.Empty;
 
         public double YearsInPratice { get; set; }
-
-        public int EmpPoints { get; set; }
-
-        public int PongPoints { get; set; }
-
-        public int LossesInPingPong { get; set; }
-
-        public int WinningsInPingPong { get; set; }
 
         [StringLength(100)]
         public string Email { get; set; } = string.Empty;

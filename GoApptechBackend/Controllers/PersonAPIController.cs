@@ -50,33 +50,29 @@ namespace GoApptechBackend.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ApiResponse>> GetPeople(int id)
+        public async Task<ActionResult<GetPersonDTO>> GetPeople(int id)
         {
             try
             {
-                if (id == 0)
+                if (id <= 0)
                 {
-                    apiResponse.StatusCode = HttpStatusCode.BadRequest;
-                    return BadRequest(apiResponse);
+                    return BadRequest("Invalid person ID");
                 }
+
                 var person = await context.GetAsync(p => p.PersonID == id);
+
                 if (person == null)
                 {
-                    apiResponse.StatusCode = HttpStatusCode.NotFound;
-                    return BadRequest(apiResponse);
+                    return NotFound("Person not found");
                 }
-                apiResponse.Result = mapper.Map<GetPersonDTO>(person);
-                apiResponse.StatusCode = HttpStatusCode.OK;
-                apiResponse.IsSuccess = true;
-                return Ok(apiResponse);
+
+                var personDto = mapper.Map<GetPersonDTO>(person);
+                return Ok(personDto);
             }
             catch (Exception ex)
             {
-                apiResponse.IsSuccess = false;
-                apiResponse.Errors
-                    = new List<string>() { ex.ToString() };
+                return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred: {ex.Message}");
             }
-            return apiResponse;
         }
 
 
@@ -143,7 +139,7 @@ namespace GoApptechBackend.Controllers
         {
             try
             {
-                if (updateDto == null || id != updateDto.PersonId)
+                if (updateDto == null)
                 {
                     return BadRequest();
                 }
@@ -180,11 +176,6 @@ namespace GoApptechBackend.Controllers
                 if (updateDto.YearsInPratice != existingPerson.YearsInPratice && updateDto.YearsInPratice > 0)
                 {
                     existingPerson.YearsInPratice = updateDto.YearsInPratice;
-                }
-
-                if (updateDto.EmpPoints != existingPerson.EmpPoints && updateDto.EmpPoints > 0)
-                {
-                    existingPerson.EmpPoints = updateDto.EmpPoints;
                 }
 
 
