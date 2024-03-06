@@ -4,7 +4,7 @@ namespace GoApptechBackend.Models.DTO.PersonDTO
 {
     public class UpdatePersonDTO
     {
-        public int PersonId { get; set; }
+        public int PersonID { get; set; }
 
 
         [StringLength(30)]

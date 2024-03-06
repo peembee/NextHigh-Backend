@@ -163,14 +163,14 @@ namespace GoApptechBackend.Controllers
                 }
 
 
-                if (updateDto.Email != existingPerson.Email && existingPerson.Email != updateDto.Email)
+                if (updateDto.Email != existingPerson.Email)
                 {
                     existingPerson.Email = updateDto.Email;
                 }
 
                 if (!string.IsNullOrWhiteSpace(updateDto.ImageURL) && existingPerson.ImageURL != updateDto.ImageURL)
                 {
-                    existingPerson.ImageURL = char.ToUpper(updateDto.ImageURL[0]) + updateDto.ImageURL.Substring(1).ToLower();
+                    existingPerson.ImageURL = updateDto.ImageURL;
                 }
 
                 if (updateDto.YearsInPratice != existingPerson.YearsInPratice && updateDto.YearsInPratice > 0)

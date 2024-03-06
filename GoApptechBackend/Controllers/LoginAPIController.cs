@@ -1,10 +1,12 @@
-﻿using GoApptechBackend.APIResponse;
+﻿using AutoMapper;
+using GoApptechBackend.APIResponse;
 using GoApptechBackend.Models;
 using GoApptechBackend.Models.DTO.PersonDTO;
 using GoApptechBackend.Repository.Irepository;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Net;
 
 namespace GoApptechBackend.Controllers
@@ -15,11 +17,13 @@ namespace GoApptechBackend.Controllers
     {
         private readonly IRepository<Person> context;
         protected ApiResponse apiResponse;
+        private readonly IMapper mapper;
 
-        public LoginAPIController(IRepository<Person> context)
+        public LoginAPIController(IRepository<Person> context, IMapper mapper)
         {
             this.context = context;
             this.apiResponse = new ApiResponse();
+            this.mapper = mapper;
         }
 
         [HttpPost]
@@ -40,13 +44,15 @@ namespace GoApptechBackend.Controllers
                 if (findUser == null)
                 {
                     return BadRequest("Invalid username or password");
-                }
+                }                
+
+                var personDto = mapper.Map<GetPersonDTO>(findUser);
 
                 var response = new ApiResponse
                 {
                     StatusCode = HttpStatusCode.OK,
                     IsSuccess = true,
-                    Result = findUser
+                    Result = personDto
                 };
                 return Ok(response);
             }

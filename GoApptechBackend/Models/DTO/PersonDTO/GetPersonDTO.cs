@@ -5,7 +5,9 @@ namespace GoApptechBackend.Models.DTO.PersonDTO
 {
     public class GetPersonDTO
     {
-        public int PersonId { get; set; }
+        public int PersonID { get; set; }
+
+        public bool isAdmin { get; set; }
 
         public int FK_PingPongRankID { get; set; }
 
@@ -21,6 +23,10 @@ namespace GoApptechBackend.Models.DTO.PersonDTO
         public int EmpPoints { get; set; }
 
         public double YearsInPratice { get; set; }
+
+        public string? ImageURL { get; set; } = string.Empty;
+
+        public DateTime CreatedDate { get; set; }
 
     }
 }

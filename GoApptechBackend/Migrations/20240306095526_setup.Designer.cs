@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoApptechBackend.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240305073251_added admin property")]
-    partial class addedadminproperty
+    [Migration("20240306095526_setup")]
+    partial class setup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
