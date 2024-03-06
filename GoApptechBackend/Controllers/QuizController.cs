@@ -24,7 +24,7 @@ namespace GoApptechBackend.Controllers
             this.apiResponse = new ApiResponse();
             this.mapper = mapper;
         }
-
+        // fix
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
