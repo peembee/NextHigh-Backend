@@ -28,9 +28,13 @@ namespace GoApptechBackend.Models
         [StringLength(250)]
         public string AltThree { get; set; } = string.Empty;
 
+        [Required] 
+        public int Points { get; set; }
 
         [Required]
         [StringLength(25)]
         public string CorrectAnswer { get; set; } = string.Empty;
+
+        public virtual ICollection<EmployeeResult>? EmployeeResults { get; set; }
     }
 }

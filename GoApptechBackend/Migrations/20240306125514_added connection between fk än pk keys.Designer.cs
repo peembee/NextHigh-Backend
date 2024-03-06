@@ -4,6 +4,7 @@ using GoApptechBackend.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoApptechBackend.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240306125514_added connection between fk än pk keys")]
+    partial class addedconnectionbetweenfkänpkkeys
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,16 +60,8 @@ namespace GoApptechBackend.Migrations
                     b.Property<int>("FK_QuizID")
                         .HasColumnType("int");
 
-                    b.Property<string>("GuessedAnswer")
-                        .IsRequired()
-                        .HasMaxLength(25)
-                        .HasColumnType("nvarchar(25)");
-
                     b.Property<DateTime>("QuizDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("isCorrect")
-                        .HasColumnType("bit");
 
                     b.HasKey("EmployeeResultID");
 
@@ -182,10 +177,6 @@ namespace GoApptechBackend.Migrations
                     b.Property<int>("OpponentPoints")
                         .HasColumnType("int");
 
-                    b.Property<string>("OpponentUsername")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("WonMatch")
                         .HasColumnType("bit");
 
@@ -223,9 +214,6 @@ namespace GoApptechBackend.Migrations
                         .IsRequired()
                         .HasMaxLength(25)
                         .HasColumnType("nvarchar(25)");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
 
                     b.Property<string>("QuizHeading")
                         .IsRequired()

@@ -61,5 +61,7 @@ namespace GoApptechBackend.Models
         [Required]
         public DateTime CreatedDate { get; set; } = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
+        public virtual ICollection<EmployeeResult>? EmployeeResults { get; set; }
+        public virtual ICollection<PingPongResults>? PingPongResults { get; set; }
     }
 }

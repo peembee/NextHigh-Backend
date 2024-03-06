@@ -21,6 +21,9 @@ namespace GoApptechBackend.Models
         [Required]
         public int OpponentPoints { get; set; }
 
+        [Required] 
+        public string OpponentUsername { get; set; } = string.Empty;
+
         [Required]
         public bool WonMatch { get; set; }
 

@@ -16,5 +16,6 @@ namespace GoApptechBackend.Models
         [Required]
         public int RequiredPoints { get; set; }
 
+        public virtual ICollection<Person>? Persons { get; set; }
     }
 }

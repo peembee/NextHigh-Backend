@@ -21,6 +21,13 @@ namespace GoApptechBackend.Models
         public virtual Quiz? Quizzes { get; set; }
 
         [Required]
+        [StringLength(25)]
+        public string GuessedAnswer { get; set; } = string.Empty;
+
+        [Required]
+        public bool isCorrect { get; set; }
+
+    [Required]
         public DateTime QuizDate { get; set; } = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
     }
 }
