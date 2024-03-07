@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace GoApptechBackend.Models
 {
@@ -13,15 +14,18 @@ namespace GoApptechBackend.Models
         [Required]
         [ForeignKey("Persons")]
         public int FK_PersonID { get; set; }
+        [JsonIgnore]
         public virtual Person? Persons { get; set; }
 
         [Required]
         [ForeignKey("Quizzes")]
         public int FK_QuizID { get; set; }
+
+        [JsonIgnore]
         public virtual Quiz? Quizzes { get; set; }
 
         [Required]
-        [StringLength(25)]
+        [StringLength(250)]
         public string GuessedAnswer { get; set; } = string.Empty;
 
         [Required]

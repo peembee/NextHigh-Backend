@@ -2,10 +2,11 @@
 using GoApptechBackend.APIResponse;
 using GoApptechBackend.Data;
 using GoApptechBackend.Models;
-using GoApptechBackend.Models.DTO.PersonDTO;
+using GoApptechBackend.Models.DTO.QuizDTO;
 using GoApptechBackend.Repository.Irepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Net;
 
 namespace GoApptechBackend.Controllers
@@ -24,7 +25,7 @@ namespace GoApptechBackend.Controllers
             this.apiResponse = new ApiResponse();
             this.mapper = mapper;
         }
-        // fix
+
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -35,18 +36,11 @@ namespace GoApptechBackend.Controllers
             {
                 IEnumerable<Quiz> quizzes = await context.GetAllAsync();
 
-                var mappedResult = quizzes.Select(quiz => new QuizDTO
-                {
-                    QuizHeading = quiz.QuizHeading,
-                    AltOne = quiz.AltOne,
-                    AltTwo = quiz.AltTwo,
-                    AltThree = quiz.AltThree,
-                    Points = quiz.Points
-                }).ToList();
+                var mappResult = mapper.Map<List<QuizDTO>>(quizzes);
 
                 var apiResponse = new ApiResponse
                 {
-                    Result = mappedResult,
+                    Result = mappResult,
                     StatusCode = System.Net.HttpStatusCode.OK,
                     IsSuccess = true
                 };
@@ -64,56 +58,44 @@ namespace GoApptechBackend.Controllers
             }
         }
 
-        //[HttpGet("{id:int}", Name = "GetQuizById")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]
-        //public async Task<ActionResult<ApiResponse>> GetResultsById(int id)
-        //{
-        //    try
-        //    {
-        //        var personWithRank = await context
-        //         .Include(table => table.PingPongRanks)
-        //         .Where(person => person.PersonID == id)
-        //         .FirstOrDefaultAsync();
+        [HttpGet("{id:int}", Name = "GetQuizById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<ApiResponse>> GetResultsById(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    return BadRequest("Invalid Quiz-ID");
+                }
 
-        //        if (personWithRank != null)
-        //        {
-        //            var mappedResult = new PersonWithRankDTO
-        //            {
-        //                Username = personWithRank.Username,
-        //                FirstName = personWithRank.FirstName,
-        //                LastName = personWithRank.LastName,
-        //                RankTitle = personWithRank.PingPongRanks?.RankTitle ?? "Unknown"
-        //            };
+                var quiz = await context.GetAsync(q => q.QuizID == id);
 
-        //            var apiResponse = new ApiResponse
-        //            {
-        //                Result = mappedResult,
-        //                StatusCode = HttpStatusCode.OK,
-        //                IsSuccess = true
-        //            };
+                if (quiz == null)
+                {
+                    return NotFound("Quiz not found");
+                }
 
-        //            return Ok(apiResponse);
-        //        }
-        //        else
-        //        {
-        //            var apiResponse = new ApiResponse
-        //            {
-        //                IsSuccess = false,
-        //                Errors = new List<string>() { "Person not found" }
-        //            };
+                var quizDto = mapper.Map<QuizDTO>(quiz);
 
-        //            return NotFound(apiResponse);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        var apiResponse = new ApiResponse
-        //        {
-        //            IsSuccess = false,
-        //            Errors = new List<string>() { ex.ToString() }
-        //        };
-        //        return StatusCode(StatusCodes.Status500InternalServerError, apiResponse);
-        //    }
-        //}
+                var apiResponse = new ApiResponse
+                {
+                    Result = quizDto,
+                    StatusCode = System.Net.HttpStatusCode.OK,
+                    IsSuccess = true
+                };
+
+                return Ok(apiResponse);
+            }
+            catch (Exception ex)
+            {
+                var apiResponse = new ApiResponse
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>() { ex.ToString() }
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, apiResponse);
+            }
+        }
     }
 }

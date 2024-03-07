@@ -32,7 +32,7 @@ namespace GoApptechBackend.Models
         public int Points { get; set; }
 
         [Required]
-        [StringLength(25)]
+        [StringLength(250)]
         public string CorrectAnswer { get; set; } = string.Empty;
 
         public virtual ICollection<EmployeeResult>? EmployeeResults { get; set; }

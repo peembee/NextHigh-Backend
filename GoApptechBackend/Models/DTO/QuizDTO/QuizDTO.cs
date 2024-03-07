@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GoApptechBackend.Models.DTO.PersonDTO
+namespace GoApptechBackend.Models.DTO.QuizDTO
 {
     [NotMapped]
     public class QuizDTO
     {
+        public int QuizID { get; set; }
         public string QuizHeading { get; set; } = string.Empty;
 
         public string AltOne { get; set; } = string.Empty;

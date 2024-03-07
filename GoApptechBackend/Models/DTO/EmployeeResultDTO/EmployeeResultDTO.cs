@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GoApptechBackend.Models.DTO.PersonDTO
+namespace GoApptechBackend.Models.DTO.EmployeeResultDTO
 {
     [NotMapped]
     public class EmployeeResultDTO
@@ -12,6 +13,8 @@ namespace GoApptechBackend.Models.DTO.PersonDTO
         public string GuessedAnswer { get; set; } = string.Empty;
 
         public string QuizDate { get; set; } = string.Empty;
+
+        public int Points { get; set; }
 
         public string isCorrect { get; set; } = string.Empty;
 

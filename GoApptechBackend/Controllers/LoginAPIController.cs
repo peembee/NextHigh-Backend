@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GoApptechBackend.APIResponse;
 using GoApptechBackend.Models;
+using GoApptechBackend.Models.DTO.LoginDTO;
 using GoApptechBackend.Models.DTO.PersonDTO;
 using GoApptechBackend.Repository.Irepository;
 using Microsoft.AspNetCore.Http.HttpResults;

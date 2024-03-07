@@ -2,13 +2,13 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 
-namespace GoApptechBackend.Models.DTO.PersonDTO
+namespace GoApptechBackend.Models.DTO.PingPongResultDTO
 {
     [NotMapped]
     public class PingPongResultDTO
     {
         public string Username { get; set; } = string.Empty;
-        public string MyPoints { get; set; } = string.Empty;
+        public int MyPoints { get; set; }
 
 
         public string OpponentUsername { get; set; } = string.Empty;

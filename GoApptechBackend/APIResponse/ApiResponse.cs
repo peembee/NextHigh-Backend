@@ -12,6 +12,5 @@ namespace GoApptechBackend.APIResponse
 
         public object Result { get; set; } = new object();
 
-        public int ApiResponseWithID { get; set; }
     }
 }

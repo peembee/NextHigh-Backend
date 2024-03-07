@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GoApptechBackend.Models.DTO.PersonDTO
+namespace GoApptechBackend.Models.DTO.LoginDTO
 {
     public class LoginPersonDTO
     {

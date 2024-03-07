@@ -2,7 +2,7 @@
 using GoApptechBackend.APIResponse;
 using GoApptechBackend.Data;
 using GoApptechBackend.Models;
-using GoApptechBackend.Models.DTO.PersonDTO;
+using GoApptechBackend.Models.DTO.ModifiedDTOs;
 using GoApptechBackend.Repository.Irepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,7 @@ using System.Net;
 
 namespace GoApptechBackend.Controllers
 {
-    [Route("api/PingPongRanks")]
+    [Route("api/PongRanks")]
     [ApiController]
     public class PingPongRankAPIController : ControllerBase
     {
@@ -45,7 +45,6 @@ namespace GoApptechBackend.Controllers
                     RankTitle = person.PingPongRanks.RankTitle ?? "Unknown"
                 }).ToList();
 
-                //var mappedResult = mapper.Map<List<GetPersonDTO>>(personListWithRankNames.Select(item => item.Person));
                 var apiResponse = new ApiResponse
                 {
                     Result = mappedResult,
@@ -66,7 +65,7 @@ namespace GoApptechBackend.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name = "GetPingPongRank")]
+        [HttpGet("{id:int}", Name = "GetPongRank")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<ApiResponse>> GetRank(int id)
         {
@@ -101,7 +100,7 @@ namespace GoApptechBackend.Controllers
                     var apiResponse = new ApiResponse
                     {
                         IsSuccess = false,
-                        Errors = new List<string>() { "Person not found" }
+                        Errors = new List<string>() { "not found" }
                     };
 
                     return NotFound(apiResponse);

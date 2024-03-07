@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using GoApptechBackend.APIResponse;
 using GoApptechBackend.Data;
-using GoApptechBackend.Models.DTO.PersonDTO;
+using GoApptechBackend.Models.DTO.ModifiedDTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -42,7 +42,6 @@ namespace GoApptechBackend.Controllers
                     RankTitle = person.EmployeeRanks.RankTitle ?? "Unknown"
                 }).ToList();
 
-                //var mappedResult = mapper.Map<List<GetPersonDTO>>(personListWithRankNames.Select(item => item.Person));
                 var apiResponse = new ApiResponse
                 {
                     Result = mappedResult,
@@ -76,7 +75,7 @@ namespace GoApptechBackend.Controllers
 
                 if (personWithRank != null)
                 {
-                    var mappedResult = new PersonWithRankDTO
+                    var mappedResult = new PersonWithEmpRankDTO
                     {
                         Username = personWithRank.Username,
                         FirstName = personWithRank.FirstName,

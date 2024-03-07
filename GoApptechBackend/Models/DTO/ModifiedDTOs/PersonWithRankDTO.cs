@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GoApptechBackend.Models.DTO.PersonDTO
+namespace GoApptechBackend.Models.DTO.ModifiedDTOs
 {
     [NotMapped]
-    public class PersonWithEmpRankDTO
+    public class PersonWithRankDTO
     {
         public string Username { get; set; } = string.Empty;
         public string FirstName { get; set; } = string.Empty;

@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
 using GoApptechBackend.APIResponse;
 using GoApptechBackend.Data;
-using GoApptechBackend.Models.DTO.PersonDTO;
+using GoApptechBackend.Models;
+using GoApptechBackend.Models.DTO.ModifiedDTOs;
+using GoApptechBackend.Models.DTO.PingPongResultDTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Net;
 
 namespace GoApptechBackend.Controllers
 {
-    [Route("api/PingPongResult")]
+    [Route("api/PongResult")]
     [ApiController]
     public class PingPongResultController : ControllerBase
     {
@@ -31,18 +34,29 @@ namespace GoApptechBackend.Controllers
         {
             try
             {
-                // Hämta alla personer från databasen tillsammans med deras respektive pingpong-ranknamn
-                var personListWithRankNames = await context.Persons.Include(tabel => tabel.PingPongRanks).ToListAsync();
+                // Hämta alla personer från databasen tillsammans med deras respektive pingpong resultat
+                var pingPongResults = await context.Persons.Include(p => p.PingPongResults).ToListAsync();
 
-                var mappedResult = personListWithRankNames.Select(person => new PersonWithRankDTO
+                var mappedResult = new List<PingPongResultDTO>();
+
+                foreach (var person in pingPongResults)
                 {
-                    Username = person.Username,
-                    FirstName = person.FirstName,
-                    LastName = person.LastName,
-                    RankTitle = person.PingPongRanks.RankTitle ?? "Unknown"
-                }).ToList();
+                    foreach (var pingPongResult in person.PingPongResults)
+                    {
+                        var resultDTO = new PingPongResultDTO
+                        {
+                            Username = person.Username,
+                            MyPoints = pingPongResult.FK_PersonIDPoints,
+                            OpponentUsername = pingPongResult.OpponentUsername,
+                            OpponentPoints = pingPongResult.OpponentPoints,
+                            WonMatch = pingPongResult.WonMatch ? "Victory" : "Defeat",
+                            MatchDate = pingPongResult.MatchDate.ToString()
+                        };
 
-                //var mappedResult = mapper.Map<List<GetPersonDTO>>(personListWithRankNames.Select(item => item.Person));
+                        mappedResult.Add(resultDTO);
+                    }
+                }
+
                 var apiResponse = new ApiResponse
                 {
                     Result = mappedResult,
@@ -63,26 +77,25 @@ namespace GoApptechBackend.Controllers
             }
         }
 
-        [HttpGet("{id:int}", Name = "GetPingPongResults")]
+        [HttpGet("{employeeId:int}", Name = "GetPingPongResults")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<ApiResponse>> GetResultsById(int id)
+        public async Task<ActionResult<ApiResponse>> GetResultsById(int employeeId)
         {
             try
             {
-                var personWithRank = await context.Persons
-                 .Include(table => table.PingPongRanks)
-                 .Where(person => person.PersonID == id)
-                 .FirstOrDefaultAsync();
+                var person = await context.Persons.Include(p => p.PingPongResults).FirstOrDefaultAsync(p => p.PersonID == employeeId);
 
-                if (personWithRank != null)
+                if (person != null)
                 {
-                    var mappedResult = new PersonWithRankDTO
+                    var mappedResult = person.PingPongResults.Select(pingPongResult => new PingPongResultDTO
                     {
-                        Username = personWithRank.Username,
-                        FirstName = personWithRank.FirstName,
-                        LastName = personWithRank.LastName,
-                        RankTitle = personWithRank.PingPongRanks?.RankTitle ?? "Unknown"
-                    };
+                        Username = person.Username,
+                        MyPoints = pingPongResult.FK_PersonIDPoints,
+                        OpponentUsername = pingPongResult.OpponentUsername,
+                        OpponentPoints = pingPongResult.OpponentPoints,
+                        WonMatch = pingPongResult.WonMatch ? "Victory" : "Defeat",
+                        MatchDate = pingPongResult.MatchDate.ToString()
+                    }).ToList();
 
                     var apiResponse = new ApiResponse
                     {

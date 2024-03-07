@@ -20,6 +20,7 @@ namespace GoApptechBackend
                  builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddScoped<IRepository<Person>, Repository<Person>>();
+            builder.Services.AddScoped<IRepository<Quiz>, Repository<Quiz>>();
 
             // cors policies
             builder.Services.AddCors(options =>
