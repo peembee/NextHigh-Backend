@@ -7,6 +7,7 @@ namespace GoApptechBackend.Models.DTO.EmployeeResultDTO
     [NotMapped]
     public class EmployeeResultDTO
     {
+        public int FK_QuizID { get; set; }
         public string Username { get; set; } = string.Empty;
         public string QuizHeading { get; set; } = string.Empty;
 

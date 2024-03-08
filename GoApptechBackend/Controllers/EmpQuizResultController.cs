@@ -94,9 +94,9 @@ namespace GoApptechBackend.Controllers
                         GuessedAnswer = result.GuessedAnswer,
                         isCorrect = result.isCorrect ? "Correct answer" : "Incorrect answer",
                         QuizDate = result.QuizDate.ToString(),
-                        Points = result.Quizzes.Points
-                        
-                    }).ToList();
+                        Points = result.Quizzes.Points,
+                        FK_QuizID = result.Quizzes.QuizID,
+                    }).ToList();                    
 
                     var apiResponse = new ApiResponse
                     {
@@ -143,13 +143,18 @@ namespace GoApptechBackend.Controllers
                 }
 
                 EmployeeResult employeeResult = mapper.Map<EmployeeResult>(createDto);
-
+                var updateEmployeePoints = await context.Persons.FirstOrDefaultAsync(p => p.PersonID == createDto.FK_PersonID);
                 var checkAnswer = await context.Quizzes.FirstOrDefaultAsync(q => q.QuizID == createDto.FK_QuizID);
+
                 if (checkAnswer != null)
                 {
                     if (checkAnswer.CorrectAnswer.ToString() == createDto.GuessedAnswer.ToString())
                     {
-                        employeeResult.isCorrect = true;
+                        employeeResult.isCorrect = true;                        
+                        if (updateEmployeePoints != null)
+                        {
+                            updateEmployeePoints.EmpPoints += checkAnswer.Points;
+                        }
                     }
                     else
                     {
