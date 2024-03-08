@@ -4,6 +4,7 @@ using AutoMapper;
 using GoApptechBackend.Models.DTO.LoginDTO;
 using GoApptechBackend.Models.DTO.QuizDTO;
 using GoApptechBackend.Models.DTO.EmployeeResultDTO;
+using GoApptechBackend.Models.DTO.PingPongResultDTO;
 
 namespace GoApptechBackend.MappingConfig
 {
@@ -22,6 +23,8 @@ namespace GoApptechBackend.MappingConfig
             CreateMap<Quiz, QuizDTO>().ReverseMap();
 
             CreateMap<CreateEmployeeResultDTO, EmployeeResult>().ReverseMap();
+
+            CreateMap<CreatePingPongResultDTO, PingPongResults>().ReverseMap();
         }
     }
 }

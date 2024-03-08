@@ -7,7 +7,10 @@ using GoApptechBackend.Models.DTO.PingPongResultDTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.ComponentModel;
 using System.Net;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 namespace GoApptechBackend.Controllers
 {
@@ -45,6 +48,7 @@ namespace GoApptechBackend.Controllers
                     {
                         var resultDTO = new PingPongResultDTO
                         {
+                            PingPongResultID = pingPongResult.PingPongResultID,
                             Username = person.Username,
                             MyPoints = pingPongResult.FK_PersonIDPoints,
                             OpponentUsername = pingPongResult.OpponentUsername,
@@ -89,6 +93,7 @@ namespace GoApptechBackend.Controllers
                 {
                     var mappedResult = person.PingPongResults.Select(pingPongResult => new PingPongResultDTO
                     {
+                        PingPongResultID = pingPongResult.PingPongResultID,
                         Username = person.Username,
                         MyPoints = pingPongResult.FK_PersonIDPoints,
                         OpponentUsername = pingPongResult.OpponentUsername,
@@ -127,5 +132,62 @@ namespace GoApptechBackend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, apiResponse);
             }
         }
-    }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse>> CreatePongResult([FromBody] CreatePingPongResultDTO createDto)
+        {
+            if (createDto == null)
+            {
+                return BadRequest(createDto);
+            }
+            try
+            {
+                PingPongResults pingPongResult = mapper.Map<PingPongResults>(createDto);
+
+                pingPongResult.WonMatch = createDto.FK_PersonIDPoints > createDto.OpponentPoints ? true : false;
+                pingPongResult.MatchDate = DateTime.Now;
+
+                await context.PingPongResults.AddAsync(pingPongResult);
+
+                // update opponent result
+                var userNameFromDTO = await context.Persons.FirstOrDefaultAsync(p => p.PersonID == createDto.FK_PersonID);
+                var opponentID = await context.Persons.FirstOrDefaultAsync(p => p.Username == pingPongResult.OpponentUsername);
+
+                PingPongResults opponent = new PingPongResults();
+                opponent.FK_PersonID = opponentID.PersonID;
+                opponent.OpponentPoints = pingPongResult.FK_PersonIDPoints;
+                opponent.FK_PersonIDPoints = pingPongResult.OpponentPoints;
+                opponent.OpponentUsername = userNameFromDTO.Username;
+                opponent.WonMatch = opponent.FK_PersonIDPoints > opponent.OpponentPoints ? true : false;
+                opponent.MatchDate = pingPongResult.MatchDate;
+
+                await context.PingPongResults.AddAsync(opponent);
+                await context.SaveChangesAsync();
+
+                apiResponse.Result = pingPongResult;
+                apiResponse.StatusCode = System.Net.HttpStatusCode.Created;
+                apiResponse.IsSuccess = true;
+
+                var jsonOptions = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.Preserve
+                };
+                var json = JsonSerializer.Serialize(apiResponse, jsonOptions);
+
+                return Content(json, "application/json");
+            }
+            catch (Exception ex)
+            {
+                var apiResponse = new ApiResponse
+                {
+                    IsSuccess = false,
+                    Errors = new List<string>() { ex.ToString() }
+                };
+                return StatusCode(StatusCodes.Status500InternalServerError, apiResponse);
+            }
+        }
+    }    
 }
