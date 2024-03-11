@@ -28,6 +28,9 @@ namespace GoApptechBackend.Models
         public bool WonMatch { get; set; }
 
         [Required]
+        public string MatchGuid { get; set; } = string.Empty;
+
+        [Required]
         public DateTime MatchDate { get; set; } = DateTime.ParseExact(DateTime.Now.ToString("yyyy-MM-dd"), "yyyy-MM-dd", CultureInfo.InvariantCulture);
     }
 }

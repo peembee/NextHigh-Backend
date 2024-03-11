@@ -48,6 +48,7 @@ namespace GoApptechBackend.Controllers
                     {
                         var resultDTO = new PingPongResultDTO
                         {
+                            MatchGuid = pingPongResult.MatchGuid,
                             PingPongResultID = pingPongResult.PingPongResultID,
                             Username = person.Username,
                             MyPoints = pingPongResult.FK_PersonIDPoints,
@@ -93,6 +94,7 @@ namespace GoApptechBackend.Controllers
                 {
                     var mappedResult = person.PingPongResults.Select(pingPongResult => new PingPongResultDTO
                     {
+                        MatchGuid = pingPongResult.MatchGuid,
                         PingPongResultID = pingPongResult.PingPongResultID,
                         Username = person.Username,
                         MyPoints = pingPongResult.FK_PersonIDPoints,
@@ -145,19 +147,54 @@ namespace GoApptechBackend.Controllers
             }
             try
             {
+                Guid uniqueId = Guid.NewGuid();
+                string guidString = uniqueId.ToString();
+
                 PingPongResults pingPongResult = mapper.Map<PingPongResults>(createDto);
 
                 pingPongResult.WonMatch = createDto.FK_PersonIDPoints > createDto.OpponentPoints ? true : false;
                 pingPongResult.MatchDate = DateTime.Now;
+                pingPongResult.MatchGuid = guidString;
 
                 await context.PingPongResults.AddAsync(pingPongResult);
 
-                // update opponent result
                 var userNameFromDTO = await context.Persons.FirstOrDefaultAsync(p => p.PersonID == createDto.FK_PersonID);
                 var opponentID = await context.Persons.FirstOrDefaultAsync(p => p.Username == pingPongResult.OpponentUsername);
 
+                // updating Ranks
+                if (pingPongResult.WonMatch == true)
+                {
+                    int victories = 1;
+                    var pingPongRanks = await context.PingPongRanks.ToListAsync();
+                    var getPongResults = await context.PingPongResults.Where(r => r.FK_PersonID == createDto.FK_PersonID).ToListAsync();
+                    foreach (var results in getPongResults)
+                    {
+                        if (results.WonMatch == true)
+                        {
+                            victories++;
+                        }
+                    }
+                    foreach( var rank in pingPongRanks)
+                    {
+                        if (victories >= rank.RequiredWinnings)
+                        {
+                            userNameFromDTO.FK_PingPongRankID = rank.PingPongRankID;
+                        }
+                        else
+                        {
+                            // Bryt loopen när vi når den högsta rankningen som användaren har uppnått
+                            break;
+                        }
+                    }
+                    context.Persons.Update(userNameFromDTO);
+                    await context.SaveChangesAsync();
+                }
+
+
+                // update opponent result
                 PingPongResults opponent = new PingPongResults();
                 opponent.FK_PersonID = opponentID.PersonID;
+                opponent.MatchGuid = guidString;
                 opponent.OpponentPoints = pingPongResult.FK_PersonIDPoints;
                 opponent.FK_PersonIDPoints = pingPongResult.OpponentPoints;
                 opponent.OpponentUsername = userNameFromDTO.Username;
@@ -189,5 +226,5 @@ namespace GoApptechBackend.Controllers
                 return StatusCode(StatusCodes.Status500InternalServerError, apiResponse);
             }
         }
-    }    
+    }
 }

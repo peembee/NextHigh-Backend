@@ -8,6 +8,7 @@ namespace GoApptechBackend.Models.DTO.PingPongResultDTO
     public class PingPongResultDTO
     {
         public int PingPongResultID { get; set; }
+        public string MatchGuid { get; set; } = string.Empty;
         public string Username { get; set; } = string.Empty;
         public int MyPoints { get; set; }
         public string OpponentUsername { get; set; } = string.Empty;

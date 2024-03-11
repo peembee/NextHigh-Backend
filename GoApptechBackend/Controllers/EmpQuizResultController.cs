@@ -44,6 +44,7 @@ namespace GoApptechBackend.Controllers
                 var mappedResult = resultsWithPersonAndQuiz.Select(result =>
                     new EmployeeResultDTO
                     {
+                        EmployeeResultID = result.EmployeeResultID,
                         Username = result.Persons?.Username,
                         QuizHeading = result.Quizzes?.QuizHeading,
                         GuessedAnswer = result.GuessedAnswer,
@@ -89,6 +90,7 @@ namespace GoApptechBackend.Controllers
                 {
                     var mappedResults = quizResults.Select(result => new EmployeeResultDTO
                     {
+                        EmployeeResultID = result.EmployeeResultID,
                         Username = result.Persons?.Username,
                         QuizHeading = result.Quizzes?.QuizHeading,
                         GuessedAnswer = result.GuessedAnswer,
@@ -96,7 +98,7 @@ namespace GoApptechBackend.Controllers
                         QuizDate = result.QuizDate.ToString(),
                         Points = result.Quizzes.Points,
                         FK_QuizID = result.Quizzes.QuizID,
-                    }).ToList();                    
+                    }).ToList();
 
                     var apiResponse = new ApiResponse
                     {
@@ -126,7 +128,7 @@ namespace GoApptechBackend.Controllers
                     Errors = new List<string>() { ex.ToString() }
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, apiResponse);
-            }         
+            }
         }
 
         [HttpPost]
@@ -145,16 +147,26 @@ namespace GoApptechBackend.Controllers
                 EmployeeResult employeeResult = mapper.Map<EmployeeResult>(createDto);
                 var updateEmployeePoints = await context.Persons.FirstOrDefaultAsync(p => p.PersonID == createDto.FK_PersonID);
                 var checkAnswer = await context.Quizzes.FirstOrDefaultAsync(q => q.QuizID == createDto.FK_QuizID);
+                var updateRanks = await context.EmployeeRanks.ToListAsync();
 
                 if (checkAnswer != null)
                 {
                     if (checkAnswer.CorrectAnswer.ToString() == createDto.GuessedAnswer.ToString())
                     {
-                        employeeResult.isCorrect = true;                        
-                        if (updateEmployeePoints != null)
+                        employeeResult.isCorrect = true;
+
+                        foreach (var points in updateRanks)
                         {
-                            updateEmployeePoints.EmpPoints += checkAnswer.Points;
+                            if (updateEmployeePoints.EmpPoints + checkAnswer.Points >= points.RequiredPoints)
+                            {
+                                updateEmployeePoints.FK_EmployeeRankID = points.EmployeeRankID;
+                            }
                         }
+
+                        updateEmployeePoints.EmpPoints += checkAnswer.Points;
+                        context.Persons.Update(updateEmployeePoints);
+                        await context.SaveChangesAsync();
+
                     }
                     else
                     {
