@@ -96,6 +96,6 @@ namespace GoApptechBackend.Controllers
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, apiResponse);
             }
-        }
+        }       
     }
 }
