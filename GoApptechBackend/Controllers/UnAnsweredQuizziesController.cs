@@ -34,14 +34,26 @@ namespace GoApptechBackend.Controllers
                 }
 
                 var quizzes = await context.Quizzes
-                    .Where(q => !q.EmployeeResults.Any(er => er.FK_PersonID == employeeId && er.isCorrect)).ToListAsync();
+                    .Where(q => !q.EmployeeResults.Any(er => er.FK_PersonID == employeeId && er.isCorrect))
+                    .ToListAsync();
 
-                if (quizzes == null)
+                if (quizzes == null || quizzes.Count == 0)
                 {
-                    return NotFound("Quiz not found");
+                    string quizData = "MissingData";
+                    return Ok(new ApiResponse
+                    {
+                        Result = quizData,
+                        IsSuccess = true
+                    });
                 }
 
-                var quizDto = mapper.Map<List<QuizDTO>>(quizzes);
+
+                // Välj en slumpmässig fråga från listan
+                var random = new Random();
+                var randomIndex = random.Next(0, quizzes.Count);
+                var randomQuiz = quizzes[randomIndex];
+
+                var quizDto = mapper.Map<QuizDTO>(randomQuiz);
 
                 var apiResponse = new ApiResponse
                 {

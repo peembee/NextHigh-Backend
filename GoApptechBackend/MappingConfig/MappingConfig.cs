@@ -27,6 +27,8 @@ namespace GoApptechBackend.MappingConfig
             CreateMap<CreatePingPongResultDTO, PingPongResults>().ReverseMap();
 
             CreateMap<Quiz, QuizDTO>().ReverseMap();
+
+            CreateMap<Quiz, CreateQuizDTO>().ReverseMap();
         }
     }
 }

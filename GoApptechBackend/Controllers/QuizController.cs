@@ -2,6 +2,7 @@
 using GoApptechBackend.APIResponse;
 using GoApptechBackend.Data;
 using GoApptechBackend.Models;
+using GoApptechBackend.Models.DTO.PersonDTO;
 using GoApptechBackend.Models.DTO.QuizDTO;
 using GoApptechBackend.Repository.Irepository;
 using Microsoft.AspNetCore.Mvc;
@@ -96,6 +97,48 @@ namespace GoApptechBackend.Controllers
                 };
                 return StatusCode(StatusCodes.Status500InternalServerError, apiResponse);
             }
-        }       
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ApiResponse>> CreatePerson([FromBody] CreateQuizDTO createDto)
+        {
+            try
+            {
+                if (createDto == null)
+                {
+                    return BadRequest(createDto);
+                }
+
+                createDto.QuizHeading = createDto.QuizHeading.Trim();
+
+                createDto.AltOne = createDto.AltOne.Trim();
+
+                createDto.AltTwo = createDto.AltTwo.Trim();
+
+                createDto.AltThree = createDto.AltThree.Trim();
+
+                createDto.CorrectAnswer = createDto.CorrectAnswer.Trim();
+
+
+                Quiz quiz = mapper.Map<Quiz>(createDto);
+
+
+                await context.CreateAsync(quiz);
+                apiResponse.Result = mapper.Map<CreateQuizDTO>(quiz);
+                apiResponse.StatusCode = System.Net.HttpStatusCode.Created;
+                apiResponse.IsSuccess = true;
+                return Ok(apiResponse.Result);
+            }
+            catch (Exception ex)
+            {
+                apiResponse.IsSuccess = false;
+                apiResponse.Errors = new List<string>() { ex.ToString() };
+            }
+            return apiResponse;
+        }
+
     }
 }
