@@ -162,16 +162,21 @@ namespace GoApptechBackend.Controllers
                                 updateEmployeePoints.FK_EmployeeRankID = points.EmployeeRankID;
                             }
                         }
-
                         updateEmployeePoints.EmpPoints += checkAnswer.Points;
-                        context.Persons.Update(updateEmployeePoints);
-                        await context.SaveChangesAsync();
-
                     }
                     else
                     {
                         employeeResult.isCorrect = false;
+                        updateEmployeePoints.EmpPoints -= checkAnswer.Points;
+
+                        if(updateEmployeePoints.EmpPoints < 0)
+                        {
+                            updateEmployeePoints.EmpPoints = 0;
+                        }
                     }
+                    
+                    context.Persons.Update(updateEmployeePoints);
+                    await context.SaveChangesAsync();
                 }
                 else
                 {
@@ -183,7 +188,12 @@ namespace GoApptechBackend.Controllers
                 await context.EmployeeResults.AddAsync(employeeResult);
                 await context.SaveChangesAsync();
 
-                apiResponse.Result = employeeResult;
+                apiResponse.Result = new
+                {
+                    GuessedAnswer = employeeResult.GuessedAnswer,
+                    IsCorrect = employeeResult.isCorrect,
+                    CorrectAnswer = checkAnswer.CorrectAnswer
+                };
                 apiResponse.StatusCode = System.Net.HttpStatusCode.Created;
                 apiResponse.IsSuccess = true;
 
