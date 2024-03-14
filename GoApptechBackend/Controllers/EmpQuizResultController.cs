@@ -169,7 +169,7 @@ namespace GoApptechBackend.Controllers
                         employeeResult.isCorrect = false;
                         updateEmployeePoints.EmpPoints -= checkAnswer.Points;
 
-                        if(updateEmployeePoints.EmpPoints < 0)
+                        if(updateEmployeePoints.EmpPoints < 1)
                         {
                             updateEmployeePoints.EmpPoints = 0;
                         }
