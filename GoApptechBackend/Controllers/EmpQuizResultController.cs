@@ -36,6 +36,7 @@ namespace GoApptechBackend.Controllers
         {
             try
             {
+
                 var resultsWithPersonAndQuiz = await context.EmployeeResults
                     .Include(result => result.Persons)
                     .Include(result => result.Quizzes)
@@ -44,13 +45,14 @@ namespace GoApptechBackend.Controllers
                 var mappedResult = resultsWithPersonAndQuiz.Select(result =>
                     new EmployeeResultDTO
                     {
-                        EmployeeResultID = result.EmployeeResultID,
+                         EmployeeResultID = result.EmployeeResultID,
                         Username = result.Persons?.Username,
                         QuizHeading = result.Quizzes?.QuizHeading,
                         GuessedAnswer = result.GuessedAnswer,
                         isCorrect = result.isCorrect ? "Correct answer" : "Incorrect answer",
                         QuizDate = result.QuizDate.ToString(),
-                        Points = result.Quizzes.Points
+                        Points = result.Quizzes.Points,
+                        FK_QuizID = result.Quizzes.QuizID,
                     }).ToList();
 
                 var apiResponse = new ApiResponse
@@ -113,11 +115,12 @@ namespace GoApptechBackend.Controllers
                 {
                     var apiResponse = new ApiResponse
                     {
-                        IsSuccess = false,
-                        Errors = new List<string>() { "No quiz results found for the employee" }
+                        Result = new List<EmployeeResultDTO>(),
+                        IsSuccess = true,
+                        StatusCode = HttpStatusCode.OK,
                     };
 
-                    return NotFound(apiResponse);
+                    return Ok(apiResponse);
                 }
             }
             catch (Exception ex)

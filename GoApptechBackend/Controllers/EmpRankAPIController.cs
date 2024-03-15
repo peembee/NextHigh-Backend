@@ -96,11 +96,12 @@ namespace GoApptechBackend.Controllers
                 {
                     var apiResponse = new ApiResponse
                     {
-                        IsSuccess = false,
+                        Result = new List<PersonWithEmpRankDTO>(),
+                        IsSuccess = true,
                         Errors = new List<string>() { "Person not found" }
                     };
 
-                    return NotFound(apiResponse);
+                    return Ok(apiResponse);
                 }
             }
             catch (Exception ex)
