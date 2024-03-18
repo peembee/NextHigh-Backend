@@ -116,6 +116,7 @@ namespace GoApptechBackend.Controllers
                 person.FK_EmployeeRankID = 1;
                 person.FK_PingPongRankID = 1;
                 person.isAdmin = false;
+                person.ImageURL = "https://i.ibb.co/0cRjfdV/robotpong.jpg";
                 person.CreatedDate = DateTime.Now;
 
                 await context.CreateAsync(person);
