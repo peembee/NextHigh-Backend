@@ -21,6 +21,8 @@ namespace GoApptechBackend.Models.DTO.PersonDTO
 
         public int EmpPoints { get; set; }
 
+        public int PongVictories { get; set; }
+
         public double YearsInPratice { get; set; }
 
         public string? ImageURL { get; set; } = string.Empty;

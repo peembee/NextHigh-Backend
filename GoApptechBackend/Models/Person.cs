@@ -54,6 +54,9 @@ namespace GoApptechBackend.Models
         [Required]
         public int EmpPoints { get; set; } = 0;
 
+        [Required]
+        public int PongVictories { get; set; } = 0;
+
 
         [StringLength(250)]
         public string? ImageURL { get; set; } = string.Empty;

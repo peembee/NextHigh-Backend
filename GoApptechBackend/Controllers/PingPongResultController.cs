@@ -164,31 +164,22 @@ namespace GoApptechBackend.Controllers
                 // updating Ranks
                 if (pingPongResult.WonMatch == true)
                 {
-                    int victories = 1;
+                    
                     var pingPongRanks = await context.PingPongRanks.ToListAsync();
-                    var getPongResults = await context.PingPongResults.Where(r => r.FK_PersonID == createDto.FK_PersonID).ToListAsync();
-                    foreach (var results in getPongResults)
-                    {
-                        if (results.WonMatch == true)
-                        {
-                            victories++;
-                        }
-                    }
+                     
+                    
                     foreach( var rank in pingPongRanks)
                     {
-                        if (victories >= rank.RequiredWinnings)
+                        if (userNameFromDTO.PongVictories + 1 >= rank.RequiredWinnings)
                         {
                             userNameFromDTO.FK_PingPongRankID = rank.PingPongRankID;
                         }
-                        else
-                        {
-                            // Bryt loopen när vi når den högsta rankningen som användaren har uppnått
-                            break;
-                        }
                     }
+                    userNameFromDTO.PongVictories = userNameFromDTO.PongVictories += 1;
                     context.Persons.Update(userNameFromDTO);
                     await context.SaveChangesAsync();
                 }
+               
 
 
                 // update opponent result
@@ -201,6 +192,23 @@ namespace GoApptechBackend.Controllers
                 opponent.WonMatch = opponent.FK_PersonIDPoints > opponent.OpponentPoints ? true : false;
                 opponent.MatchDate = pingPongResult.MatchDate;
 
+                // update opponents rank
+                if (pingPongResult.WonMatch == false)
+                {
+                    var pingPongRanks = await context.PingPongRanks.ToListAsync();
+                   
+                    foreach (var rank in pingPongRanks)
+                    {
+                        if (opponentID.PongVictories +1 >= rank.RequiredWinnings)
+                        {
+                            opponentID.FK_PingPongRankID = rank.PingPongRankID;
+                        }
+                    }
+                    opponentID.PongVictories = opponentID.PongVictories += 1;
+                    context.Persons.Update(opponentID);
+                    await context.SaveChangesAsync();
+                }
+                
                 await context.PingPongResults.AddAsync(opponent);
                 await context.SaveChangesAsync();
 
