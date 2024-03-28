@@ -31,7 +31,7 @@ namespace GoApptechBackend.Models
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(50)]
+        [StringLength(250)]
         public string Password { get; set; } = string.Empty;
 
         [Required]

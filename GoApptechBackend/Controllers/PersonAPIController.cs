@@ -118,6 +118,8 @@ namespace GoApptechBackend.Controllers
                 person.isAdmin = false;
                 person.ImageURL = "https://i.ibb.co/0cRjfdV/robotpong.jpg";
                 person.CreatedDate = DateTime.Now;
+                // create Hash-Password
+                person.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(createDto.Password, 13);
 
                 await context.CreateAsync(person);
                 apiResponse.Result = mapper.Map<CreatePersonDTO>(person);

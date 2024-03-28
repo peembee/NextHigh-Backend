@@ -40,12 +40,22 @@ namespace GoApptechBackend.Controllers
                     return BadRequest("Invalid login request");
                 }
 
-                var findUser = await context.GetAsync(employee => employee.Username.ToLower() == loginRequest.Username.ToLower().Trim() && employee.Password == loginRequest.Password);
+                var findUser = await context.GetAsync(employee => employee.Username.ToLower() == loginRequest.Username.ToLower().Trim());
 
                 if (findUser == null)
                 {
                     return BadRequest("Invalid username or password");
-                }                
+                }
+                
+                string storedPassword = findUser.Password;
+
+                // Verify the password using bcrypt
+                bool isPasswordValid = BCrypt.Net.BCrypt.EnhancedVerify(loginRequest.Password, storedPassword);
+
+                if (!isPasswordValid)
+                {
+                    return BadRequest("Invalid username or password");
+                }
 
                 var personDto = mapper.Map<GetPersonDTO>(findUser);
 

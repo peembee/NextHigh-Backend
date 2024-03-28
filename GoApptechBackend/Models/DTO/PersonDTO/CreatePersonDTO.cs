@@ -9,7 +9,7 @@ namespace GoApptechBackend.Models.DTO.PersonDTO
         public string Username { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(50)]
+        [StringLength(250)]
         public string Password { get; set; } = string.Empty;
 
         [Required]
